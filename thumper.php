@@ -17,15 +17,44 @@ function register($user, $pass, $db)
     }
     $pass = hash('sha256', $pass);
     $user = hash('sha256', $user);
-    $q = "insert into users (password, username) values ('$pass', '$user')";
+
+    $q = "select * from users where username='$user'";
     if($db->query($q) == TRUE)
     {
-        print "succesfully registered";
-        return "SUCC";
+        if(mysqli_num_rows($db->query($q)) >= 1 )
+        {
+            $exists = TRUE;
+        }
+        else
+        {
+            $exists = FALSE;
+        }
+            
     }
     else
     {
         print $db->error;
+        $exists = TRUE;
+    }
+    
+
+    if($exists == FALSE)
+    {
+        $q = "insert into users (password, username) values ('$pass', '$user')";
+    }
+    else
+    {
+        print "user already exists" . PHP_EOL;
+        return "FAIL";
+    }
+    if($db->query($q) == TRUE)
+    {
+        print  "succesfully registered" . PHP_EOL;
+        return "SUCC";
+    }
+    else
+    {
+        print $db->error . PHP_EOL;
         return "FAIL";
     }
     
@@ -49,18 +78,19 @@ function login($user, $pass, $db)
     {
         if(mysqli_num_rows($db->query($q)) == 1 )
         {
-            //print mysqli_num_rows($db->query($q));
+            print "login success" . PHP_EOL;
             return "SUCC";
         }
         else
         {
+            print "login fail" . PHP_EOL;
             return "FAIL";
         }
             
     }
     else
     {
-        print $db->error;
+        print $db->error . PHP_EOL;
         return "FAIL";
     }
     
