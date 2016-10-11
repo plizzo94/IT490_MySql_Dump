@@ -4,7 +4,7 @@ require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
 
-$db = new mysqli("10.200.172.120","server","letMe1n","user_info");
+$db = new mysqli("10.200.44.219","server","letMe1n","user_info");
 
 function register($user, $pass, $db)
 {
@@ -15,16 +15,18 @@ function register($user, $pass, $db)
         return $db->connect_error;
         exit(-1);
     }
-
+    $pass = hash('sha256', $pass);
+    $user = hash('sha256', $user);
     $q = "insert into users (password, username) values ('$pass', '$user')";
     if($db->query($q) == TRUE)
     {
-        return TRUE;
+        print "succesfully registered";
+        return "SUCC";
     }
     else
     {
         print $db->error;
-        return $db->error;
+        return "FAIL";
     }
     
 }
@@ -39,24 +41,27 @@ function login($user, $pass, $db)
         exit(-1);
     }
 
+    $pass = hash('sha256', $pass);
+    $user = hash('sha256', $user);
+    
     $q = "select * from users where username='$user' and password='$pass'";
     if($db->query($q) == TRUE)
     {
         if(mysqli_num_rows($db->query($q)) == 1 )
         {
             //print mysqli_num_rows($db->query($q));
-            return TRUE;
+            return "SUCC";
         }
         else
         {
-            return FALSE;
+            return "FAIL";
         }
             
     }
     else
     {
         print $db->error;
-        return $db->error;
+        return "FAIL";
     }
     
 }
