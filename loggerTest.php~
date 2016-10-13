@@ -1,0 +1,9 @@
+#!/usr/bin/php
+
+<?php
+
+$log = fopen("/var/log/thump.log", 'a');
+fwrite($log, 'sdfjndjn');
+fclose($log);
+
+?>

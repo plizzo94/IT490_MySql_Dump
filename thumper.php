@@ -4,14 +4,22 @@ require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
 
-$db = new mysqli("10.200.44.219","server","letMe1n","user_info");
+$db = new mysqli("10.200.44.232","server","letMe1n","user_info");
+$log = fopen( '/var/log/thump.log', 'a' );
+print_r($log);
+
+function now()
+{
+    return (new \DateTime())->format('Y-m-d H:i:s') . PHP_EOL;
+}
 
 function register($user, $pass, $db)
 {
+    fwrite($log, "==>BEGIN REGISTER<==". PHP_EOL);
 
     if ($db->connect_errno > 0 )
     {
-        echo __FILE__.__LINE__." ERROR: ".$db->connect_error.PHP_EOL;
+        fwrite($log, __FILE__.__LINE__." ERROR: ".$db->connect_error.PHP_EOL);
         return $db->connect_error;
         exit(-1);
     }
@@ -33,7 +41,7 @@ function register($user, $pass, $db)
     }
     else
     {
-        print $db->error;
+        fwrite($log, "~FAIL~ " . $db->error . PHP_EOL);
         $exists = TRUE;
     }
     
@@ -44,17 +52,16 @@ function register($user, $pass, $db)
     }
     else
     {
-        print "user already exists" . PHP_EOL;
+        fwrite($log, "~FAIL~ user already exists" . PHP_EOL);
         return "FAIL";
     }
     if($db->query($q) == TRUE)
     {
-        print  "succesfully registered" . PHP_EOL;
         return "SUCC";
     }
     else
     {
-        print $db->error . PHP_EOL;
+        fwrite($log, "~FAIL~ " . $db->error . PHP_EOL);
         return "FAIL";
     }
     
@@ -62,10 +69,11 @@ function register($user, $pass, $db)
 
 function login($user, $pass, $db)
 {
+    fwrite($log, "==>BEGIN LOGIN<== | " . now());
 
     if ($db->connect_error > 0 )
     {
-        echo __FILE__.__LINE__." ERROR: ".$db->connect_error.PHP_EOL;
+        fwrite ($log, "~FAIL~ " . $db->connect_error . PHP_EOL);
         return $db->connect_error;
         exit(-1);
     }
@@ -78,19 +86,18 @@ function login($user, $pass, $db)
     {
         if(mysqli_num_rows($db->query($q)) == 1 )
         {
-            print "login success" . PHP_EOL;
             return "SUCC";
         }
         else
         {
-            print "login fail" . PHP_EOL;
+            fwrite($log, "~FAIL~ login fail" . PHP_EOL);
             return "FAIL";
         }
             
     }
     else
     {
-        print $db->error . PHP_EOL;
+        fwrite($log, "~FAIL~ " . $db->error . PHP_EOL);
         return "FAIL";
     }
     
@@ -100,11 +107,11 @@ function requestProcessor($request)
 {
   global $db;
   
-  echo "received request".PHP_EOL;
+  fwrite($log, "==>RECEIVED REQUEST<==" . PHP_EOL);
   //var_dump($request);
   if(!isset($request['type']))
   {
-    return "ERROR: unsupported message type";
+      fwrite($log, "~FAIL~  unsupported message type");
   }
   switch ($request['type'])
   {
@@ -118,10 +125,13 @@ function requestProcessor($request)
   //return array("returnCode" => '0', 'message'=>"Server received request and processed");
 }
 
+//global $log;
 $server = new rabbitMQServer("testRabbitMQ.ini","testServer");
-
+fwrite($log, "==>BEGIN LOG<== | ". now());  
 $server->process_requests('requestProcessor');
 $db->close();
+fwrite($log, "==>END LOG<== | ". now()) . PHP_EOL;
+fclose($log);
 exit();
 ?>
 
