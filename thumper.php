@@ -6,11 +6,44 @@ require_once('rabbitMQLib.inc');
 
 $db = new mysqli("10.200.44.232","server","letMe1n","user_info");
 $log = fopen( '/var/log/thump.log', 'a' );
-print_r($log);
 
 function now()
 {
     return (new \DateTime())->format('Y-m-d H:i:s') . PHP_EOL;
+}
+
+function createPositionTable($userHash)
+{
+    fwrite($log, "==>BEGIN createPosition<== | " . now());
+
+    if ($db->connect_error > 0 )
+    {
+        fwrite ($log, "~FAIL~ " . $db->connect_error . PHP_EOL);
+        return $db->connect_error;
+        exit(-1);
+    }
+
+    $q = "create table '$userHash' ('id int(3) auto_increment primary key, currency varchar(3), position varchar(255));  ";
+
+    if($db->query($q) == TRUE)
+    {
+        $q = "insert into '$userHash' (currency, position) values ('USD', '50.000');";
+        
+        if($db->query($q) =! TRUE)
+        {
+            fwrite($log, "~FAIL~ " . $db->error . PHP_EOL);
+            return "FAIL";
+        }
+        else
+        {
+            return "SUCC";
+        }
+    }
+    else
+    {
+        fwrite($log, "~FAIL~ " . $db->error . PHP_EOL);
+        return "FAIL";
+    }
 }
 
 function register($user, $pass, $db)
@@ -24,7 +57,7 @@ function register($user, $pass, $db)
         exit(-1);
     }
     $pass = hash('sha256', $pass);
-    $user = hash('sha256', $user);
+    //$user = hash('sha256', $user);
 
     $q = "select * from users where username='$user'";
     if($db->query($q) == TRUE)
@@ -57,7 +90,7 @@ function register($user, $pass, $db)
     }
     if($db->query($q) == TRUE)
     {
-        return "SUCC";
+        return createPositionTable($user);
     }
     else
     {
@@ -79,7 +112,7 @@ function login($user, $pass, $db)
     }
 
     $pass = hash('sha256', $pass);
-    $user = hash('sha256', $user);
+    //$user = hash('sha256', $user);
     
     $q = "select * from users where username='$user' and password='$pass'";
     if($db->query($q) == TRUE)
