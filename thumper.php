@@ -4,16 +4,18 @@ require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
 
-$db = new mysqli("10.200.44.232","server","letMe1n","user_info");
-$log = fopen( '/var/log/thump.log', 'a' );
+$db = new mysqli("10.200.174.60","server","letMe1n","user_info");
+$log = fopen( 'thump.log', 'a' );
 
 function now()
 {
     return (new \DateTime())->format('Y-m-d H:i:s') . PHP_EOL;
 }
 
-function createPositionTable($userHash)
+function createPositionTable($userHash, $db)
 {
+    global $log;
+    
     fwrite($log, "==>BEGIN createPosition<== | " . now());
 
     if ($db->connect_error > 0 )
@@ -23,13 +25,13 @@ function createPositionTable($userHash)
         exit(-1);
     }
 
-    $q = "create table '$userHash' ('id int(3) auto_increment primary key, currency varchar(3), position varchar(255));  ";
+    $q = "create table " . $userHash  . " (id int(3) auto_increment primary key, currency varchar(3), position varchar(255)); ";
 
     if($db->query($q) == TRUE)
     {
-        $q = "insert into '$userHash' (currency, position) values ('USD', '50.000');";
+        $q = "insert into " . $userHash . " (currency, position) values ('USD', '50.000');";
         
-        if($db->query($q) =! TRUE)
+        if($db->query($q) != TRUE)
         {
             fwrite($log, "~FAIL~ " . $db->error . PHP_EOL);
             return "FAIL";
@@ -48,6 +50,8 @@ function createPositionTable($userHash)
 
 function register($user, $pass, $db)
 {
+    global $log;
+    
     fwrite($log, "==>BEGIN REGISTER<==". PHP_EOL);
 
     if ($db->connect_errno > 0 )
@@ -90,7 +94,13 @@ function register($user, $pass, $db)
     }
     if($db->query($q) == TRUE)
     {
-        return createPositionTable($user);
+        print "SUCC";
+        //return "SUCC";
+        $result =  createPositionTable($user, $db);
+        if($result == "SUCC")
+        {
+            return "SUCC";
+        }
     }
     else
     {
@@ -102,6 +112,8 @@ function register($user, $pass, $db)
 
 function login($user, $pass, $db)
 {
+    global $log;
+    
     fwrite($log, "==>BEGIN LOGIN<== | " . now());
 
     if ($db->connect_error > 0 )
@@ -139,9 +151,9 @@ function login($user, $pass, $db)
 function requestProcessor($request)
 {
   global $db;
-  
+  global $log;
   fwrite($log, "==>RECEIVED REQUEST<==" . PHP_EOL);
-  //var_dump($request);
+  
   if(!isset($request['type']))
   {
       fwrite($log, "~FAIL~  unsupported message type");
@@ -158,7 +170,6 @@ function requestProcessor($request)
   //return array("returnCode" => '0', 'message'=>"Server received request and processed");
 }
 
-//global $log;
 $server = new rabbitMQServer("testRabbitMQ.ini","testServer");
 fwrite($log, "==>BEGIN LOG<== | ". now());  
 $server->process_requests('requestProcessor');

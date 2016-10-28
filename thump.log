@@ -1,0 +1,70 @@
+==>BEGIN LOG<== | 2016-10-28 13:52:18
+==>BEGIN LOG<== | 2016-10-28 13:55:57
+==>RECEIVED REQUEST<==
+==>BEGIN REGISTER<==
+~FAIL~ user already exists
+==>RECEIVED REQUEST<==
+==>BEGIN REGISTER<==
+==>BEGIN createPosition<== | 2016-10-28 13:57:26
+==>BEGIN LOG<== | 2016-10-28 13:59:34
+==>RECEIVED REQUEST<==
+==>BEGIN REGISTER<==
+==>BEGIN createPosition<== | 2016-10-28 13:59:51
+~FAIL~ You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''differentname' ('id int(3) auto_increment primary key, currency varchar(3), pos' at line 1
+==>BEGIN LOG<== | 2016-10-28 14:07:44
+==>RECEIVED REQUEST<==
+==>BEGIN REGISTER<==
+==>BEGIN createPosition<== | 2016-10-28 14:08:06
+~FAIL~ You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''1' ('id int(3) auto_increment primary key, currency varchar(3), position varcha' at line 1
+==>BEGIN LOG<== | 2016-10-28 14:10:20
+==>RECEIVED REQUEST<==
+==>BEGIN REGISTER<==
+==>BEGIN createPosition<== | 2016-10-28 14:10:27
+~FAIL~ You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''2' ('id' int(3) auto_increment primary key, 'currency' varchar(3), 'position' v' at line 1
+==>BEGIN LOG<== | 2016-10-28 14:14:21
+==>RECEIVED REQUEST<==
+==>BEGIN REGISTER<==
+==>BEGIN createPosition<== | 2016-10-28 14:14:30
+~FAIL~ You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '3 (id int(3) auto_increment primary key, currency varchar(3), position varchar(2' at line 1
+==>BEGIN LOG<== | 2016-10-28 14:18:12
+==>RECEIVED REQUEST<==
+==>BEGIN REGISTER<==
+==>BEGIN createPosition<== | 2016-10-28 14:18:33
+~FAIL~ You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '4 (currency, position) values ('USD', '50.000')' at line 1
+==>BEGIN LOG<== | 2016-10-28 14:19:06
+==>RECEIVED REQUEST<==
+==>BEGIN REGISTER<==
+==>BEGIN createPosition<== | 2016-10-28 14:19:10
+~FAIL~ Table 'testPos' already exists
+==>BEGIN LOG<== | 2016-10-28 14:21:49
+==>RECEIVED REQUEST<==
+==>BEGIN REGISTER<==
+==>BEGIN createPosition<== | 2016-10-28 14:21:57
+==>BEGIN LOG<== | 2016-10-28 14:25:27
+==>RECEIVED REQUEST<==
+==>BEGIN REGISTER<==
+==>BEGIN createPosition<== | 2016-10-28 14:25:47
+SUCC
+==>BEGIN LOG<== | 2016-10-28 14:34:20
+==>RECEIVED REQUEST<==
+==>BEGIN REGISTER<==
+==>BEGIN createPosition<== | 2016-10-28 14:34:30
+==>BEGIN LOG<== | 2016-10-28 14:36:06
+==>RECEIVED REQUEST<==
+==>BEGIN REGISTER<==
+==>BEGIN LOG<== | 2016-10-28 14:42:36
+==>RECEIVED REQUEST<==
+==>BEGIN LOGIN<== | 2016-10-28 14:42:47
+~FAIL~ login fail
+==>RECEIVED REQUEST<==
+==>BEGIN REGISTER<==
+==>RECEIVED REQUEST<==
+==>BEGIN REGISTER<==
+~FAIL~ user already exists
+==>BEGIN LOG<== | 2016-10-28 14:51:30
+==>RECEIVED REQUEST<==
+==>BEGIN REGISTER<==
+==>BEGIN LOG<== | 2016-10-28 14:53:48
+==>RECEIVED REQUEST<==
+==>BEGIN REGISTER<==
+==>BEGIN createPosition<== | 2016-10-28 14:56:04
